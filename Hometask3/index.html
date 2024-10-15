@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .characterItem {
+        border: 1px solid #c1c0c0;
+        padding: 10px;
+        margin: 10px 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .characterItem img {
+        border-radius: 10%;
+        margin-right: 15px;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .pagination button,
+    .pagination span {
+        padding: 5px 10px;
+    }
+    
+    .pagination button {
+        border: 1px solid #c1c0c0;
+    }
+
+    .pagination button:hover, .characterItem:hover {
+        border: 1px solid #000000;
+    }
+
+    #message {
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
+<body>
+    <div id="characterContainer"></div>
+    <div class="pagination">
+        <button id="prevBtn">Previous</button>
+        <span id="page">Page 1</span>
+        <button id="nextBtn">Next</button>
+    </div>
+    <div id="message"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
