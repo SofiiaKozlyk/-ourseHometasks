@@ -46,27 +46,23 @@ car.ride();
 console.log("Task 2");
 const url = 'https://rickandmortyapi.com/api/character';
 const characterContainer = document.getElementById("characterContainer");
-const prevBtn = document.getElementById("prevBtn");
-const pageSpan = document.getElementById("page");
-const nextBtn = document.getElementById("nextBtn");
+const prevBtn = document.querySelector('.pagination button[data-page="prev"]');
+const pageSpan = document.querySelector('.pagination span');
+const nextBtn = document.querySelector('.pagination button[data-page="next"]');
 const message = document.getElementById("message");
+let info = {};
 
-let currentPage = 1, totalPages;
-
-function loadCharacters(page = 1){
+function loadCharacters(url){
     characterContainer.innerHTML = '';
     message.innerText = 'Loading...';
-    fetch(`${url}?page=${page}`).then(data =>{
+    fetch(url).then(data =>{
         return data.json();
     }).then(data => {
         console.log(data);
-        totalPages = data.info.pages;
-
-        pageSpan.textContent = data.info.next === null ? totalPages : parseInt(new URL(data.info.next).searchParams.get('page')) - 1;
-        
-        prevBtn.disabled = currentPage === 1;
-        nextBtn.disabled = currentPage === totalPages;
-
+        info = data.info;
+        pageSpan.textContent = data.info.next === null ? data.info.pages : parseInt(new URL(data.info.next).searchParams.get('page')) - 1;
+        prevBtn.disabled = !data.info.prev;
+        nextBtn.disabled = !data.info.next;
         const characterList = data.results.map(item => {
             return {
                 'name': item.name,
@@ -98,17 +94,9 @@ function display(characterList){
     });
 }
 
-prevBtn.addEventListener("click", () => {
-    if(currentPage > 0) {
-        currentPage--;
-        loadCharacters(currentPage);
-    }
-});
-nextBtn.addEventListener("click", () => {
-    if(currentPage < totalPages) {
-        currentPage++;
-        loadCharacters(currentPage);
-    }
+document.querySelector('.pagination').addEventListener('click', event => {
+    const action = event.target.dataset.page;
+    info[action] && loadCharacters(info[action]);
 });
 
-loadCharacters();
+loadCharacters(url);
