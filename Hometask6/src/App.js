@@ -4,7 +4,9 @@ import { Box, Toolbar } from '@mui/material';
 
 import Home from './layouts/Home';
 import About from './layouts/About';
+import Heroes from './layouts/Heroes';
 import Navbar from './components/Navbar';
+
 
 function App() {
 
@@ -17,6 +19,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/about" element={<About />} />
+                    <Route path="/heroes" element={<Heroes />} />
                 </Routes>
                 </Box>
             </Router>
