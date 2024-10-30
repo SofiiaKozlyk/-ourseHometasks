@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { CircularProgress, Typography, Toolbar, Drawer, Box } from '@mui/material';
+import { CircularProgress, Typography, Toolbar, Drawer, Box, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import CharactersList from '../components/CharactersList';
 import DirectionButton from '../components/DirectionButton';
 
-import { useLocation, Outlet } from 'react-router-dom';
+import { useLocation, Outlet, useNavigate } from 'react-router-dom';
 
 function Heroes() {
     const [url, setUrl] = useState('https://rickandmortyapi.com/api/character');
@@ -11,6 +12,7 @@ function Heroes() {
     const [characters, setCharacters] = useState([]);
     const [loading, setLoading] = useState(true);
     const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         setLoading(true);
@@ -35,9 +37,13 @@ function Heroes() {
 
     const isRootRoute = location.pathname === '/heroes';
 
+    const handleCloseDrawer = () => {
+        navigate('/heroes'); 
+      };
+
     return (
         <>
-            <Box sx={{ width: '70%' }}>
+            <Box sx={{ width: '80%' }}>
                 <CharactersList characters={characters} />
                 <Toolbar sx={{ display: 'flex', justifyContent: 'center' }}>
                     <DirectionButton onClick={buttonClick} direction="prev" />
@@ -59,6 +65,9 @@ function Heroes() {
                         '& .MuiDrawer-paper': { width: '25%' },
                     }}
                 >
+                    <IconButton onClick={handleCloseDrawer} sx={{ alignSelf: 'flex-end', m: 1 }}>
+                        <CloseIcon />
+                    </IconButton>
                     <Outlet />
                 </Drawer>
             )}
