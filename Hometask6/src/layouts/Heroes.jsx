@@ -1,35 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { CircularProgress, Typography, Toolbar, Drawer, Box, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import CharactersList from '../components/CharactersList';
 import DirectionButton from '../components/DirectionButton';
+import { useRequest } from 'ahooks';
+import { getCharacters } from '../api/api';
 
 import { useLocation, Outlet, useNavigate } from 'react-router-dom';
 
 function Heroes() {
-    const [url, setUrl] = useState('https://rickandmortyapi.com/api/character');
+    const [url, setUrl] = useState();
     const [info, setInfo] = useState({});
-    const [characters, setCharacters] = useState([]);
-    const [loading, setLoading] = useState(true);
     const location = useLocation();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        setLoading(true);
-        fetch(url).then(data => {
-            return data.json();
-        }).then(data => {
+    const { loading, data: characters } = useRequest(() => getCharacters(url), {
+        refreshDeps: [url],
+        onSuccess: (data) => {
             setInfo(data.info);
-            setCharacters(data.results);
-        }).catch(error => {
-            console.log(error);
-        }).finally(() => {
-            setLoading(false);
-        });
-    }, [url]);
+        },
+        onError: (error) => {
+            console.error("Failed to get characters:", error);
+        }
+    });
 
     const buttonClick = (direction) => setUrl(info[direction]);
-
 
     if (loading) {
         return <CircularProgress />;
@@ -44,7 +39,7 @@ function Heroes() {
     return (
         <>
             <Box sx={{ width: '80%' }}>
-                <CharactersList characters={characters} />
+                <CharactersList characters={characters.results} />
                 <Toolbar sx={{ display: 'flex', justifyContent: 'center' }}>
                     <DirectionButton onClick={buttonClick} direction="prev" />
                     <Typography variant="h6" noWrap sx={{ mx: 2 }}>

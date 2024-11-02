@@ -1,21 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Typography, CircularProgress } from '@mui/material';
+import { useRequest } from 'ahooks';
+import { getCharacterById } from '../api/api';
 
 function Hero() {
     const { id } = useParams();
-    const [character, setCharacter] = useState(null);
-    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        setLoading(true);
-        fetch(`https://rickandmortyapi.com/api/character/${id}`)
-            .then((data) => data.json())
-            .then((data) => {
-                setCharacter(data);
-                setLoading(false);
-            });
-    }, [id]);
+    const { loading, data: character } = useRequest(() => getCharacterById(id), {
+        refreshDeps: [id],
+        onError: (error) => {
+            console.error("Failed to get character data:", error);
+        }
+    });
 
     if (loading) {
         return <CircularProgress />;
@@ -30,7 +27,7 @@ function Hero() {
                 width={200}
                 sx={{
                     borderRadius: '8px',
-                    boxShadow: 2, 
+                    boxShadow: 2,
                     objectFit: 'cover',
                 }}
             />
