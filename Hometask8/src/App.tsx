@@ -8,6 +8,7 @@ import RegisterPage from './layouts/RegisterPage';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
 import ControlBar from './components/ControlBar';
+import NewPost from './layouts/NewPost';
 
 function App() {
   const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated);
@@ -46,7 +47,7 @@ function App() {
           path="/new-post"
           element={
             <ProtectedRoute isAllowed={isAuthenticated}>
-              <StipePage />
+              <NewPost />
             </ProtectedRoute>
           }
         />

@@ -13,7 +13,18 @@ export interface ExhibitsResponseI {
 
 export const fetchExhibits = async (page: number, limit: number): Promise<ExhibitsResponseI> => {
     const response = await axiosInstance.get<ExhibitsResponseI>('api/exhibits/', {
-        params: { page, limit } 
+        params: { page, limit }
+    });
+    return response.data;
+};
+
+
+
+export const addExhibit = async (formData: FormData) => {
+    const response = await axiosInstance.post('/api/exhibits', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        },
     });
     return response.data; 
 };
