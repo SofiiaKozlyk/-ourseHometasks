@@ -2,37 +2,39 @@ import React, { useEffect, useState } from "react";
 import { ExhibitPropsI } from "../api/exhibitActions";
 import Post from "../components/Post";
 import { useRequest } from 'ahooks';
-import { fetchExhibits } from "../api/exhibitActions";
+import { fetchExhibits, removeExhibit } from "../api/exhibitActions";
 import { Box } from '@mui/material';
 import Pagination from "../components/Pagination";
 
+interface StripePagePropsI {
+    filter: string;
+}
 
-const StipePage: React.FC = () => {
+const StipePage: React.FC<StripePagePropsI> = ({ filter }) => {
     const [exhibits, setExhibits] = useState<ExhibitPropsI[]>([]);
-
-
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const limit = 10;
 
-    const { loading, error, run: fetchExhibitsAction } = useRequest(() => fetchExhibits(currentPage, limit), {
+    const { loading, error, run: fetchExhibitsAction } = useRequest(() => fetchExhibits(currentPage, limit, filter), {
         manual: true,
         onSuccess: (data) => {
             console.log(data);
-            setTotalPages(data.lastPage); 
-            setExhibits(data.data); 
+            setTotalPages(data.lastPage);
+            setExhibits(data.data);
         },
     });
 
-    // const { loading, error, run: fetchExhibitsAction } = useRequest(fetchExhibits, {
-    //     manual: true,
-    //     onSuccess: (data) => {
-    //         console.log(data);
-    //         setTotalPages(data.lastPage);
-    //         setExhibits(data.data);
-    //         console.log(data.data);
-    //     }
-    // });
+    const { run: deleteExhibit } = useRequest(removeExhibit, {
+        manual: true,
+        onSuccess: () => {
+            fetchExhibitsAction();
+        }
+    });
+
+    const handleDeleteItem = (id: number) => {
+        deleteExhibit(id);
+    };
 
     useEffect(() => {
         fetchExhibitsAction();
@@ -58,9 +60,8 @@ const StipePage: React.FC = () => {
                             overflow: 'hidden',
                         }}
                     >
-                        <Post key={exhibit.id} exhibit={exhibit} />
+                        <Post key={exhibit.id} exhibit={exhibit} onDelete={() => handleDeleteItem(exhibit.id)} />
                     </Box>
-                    // <Post key={exhibit.id} exhibit={exhibit} />
                 ))}
                 <Pagination
                     currentPage={currentPage}

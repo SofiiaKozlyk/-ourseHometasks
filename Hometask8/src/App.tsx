@@ -18,7 +18,7 @@ function App() {
     <>
       <ControlBar isAuthenticated={isAuthenticated} />
       <Routes>
-        <Route path="/" element={<StipePage />} />
+        <Route path="/" element={<StipePage filter="" />} />
         <Route
           path="/login"
           element={
@@ -39,7 +39,7 @@ function App() {
           path="/my-posts"
           element={
             <ProtectedRoute isAllowed={isAuthenticated}>
-              <StipePage />
+              <StipePage filter="my-posts" />
             </ProtectedRoute>
           }
         />

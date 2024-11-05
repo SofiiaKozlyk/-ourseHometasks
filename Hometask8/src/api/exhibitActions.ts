@@ -1,9 +1,16 @@
 import axiosInstance from "./axiosInstance";
 
+export interface ExhibitAuthorI {
+    id: number;
+    username: string;
+}
+
 export interface ExhibitPropsI {
     id: number,
     imageUrl: string,
     description: string;
+    user: ExhibitAuthorI;
+    createdAt: string;
 }
 
 export interface ExhibitsResponseI {
@@ -11,14 +18,12 @@ export interface ExhibitsResponseI {
     lastPage: number;
 }
 
-export const fetchExhibits = async (page: number, limit: number): Promise<ExhibitsResponseI> => {
-    const response = await axiosInstance.get<ExhibitsResponseI>('api/exhibits/', {
+export const fetchExhibits = async (page: number, limit: number, filter: string): Promise<ExhibitsResponseI> => {
+    const response = await axiosInstance.get<ExhibitsResponseI>(`api/exhibits/${filter}`, {
         params: { page, limit }
     });
     return response.data;
 };
-
-
 
 export const addExhibit = async (formData: FormData) => {
     const response = await axiosInstance.post('/api/exhibits', formData, {
@@ -26,7 +31,16 @@ export const addExhibit = async (formData: FormData) => {
             'Content-Type': 'multipart/form-data'
         },
     });
-    return response.data; 
+    return response.data;
+};
+
+export const removeExhibit = async (id: number) => {
+    const response = await axiosInstance.delete(`/api/exhibits/${id}`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    });
+    return response.data;
 };
 
 
