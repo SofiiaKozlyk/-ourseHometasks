@@ -1,12 +1,14 @@
 import React from 'react';
 import './App.css';
-import StipePage from './layouts/StipePage';
+//import StipePage from './layouts/StipePage';
+import LoginPage from './layouts/LoginPage';
 
 function App() {
 
   return (
     <div className="App">
-      <StipePage />
+      <LoginPage />
+      {/* <StipePage /> */}
     </div>
   );
 }

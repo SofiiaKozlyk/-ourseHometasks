@@ -1,6 +1,6 @@
 import axiosInstance from "./axiosInstance";
 
-interface LoginFormPropsI {
+export interface LoginFormPropsI {
     username: string,
     password: string;
   }
