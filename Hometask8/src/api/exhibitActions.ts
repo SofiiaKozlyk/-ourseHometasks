@@ -6,6 +6,15 @@ export interface ExhibitPropsI {
     description: string;
 }
 
-export const fetchExhibits = (): Promise<{ data: ExhibitPropsI[] }> => {
-    return axiosInstance.get('api/exhibits/');
+
+export const fetchExhibits = async (): Promise<{ data: ExhibitPropsI[] }> => {
+    const response = await axiosInstance.get('api/exhibits/');
+    return response.data;
 };
+
+
+// export const fetchExhibits = (): Promise<{ data: ExhibitPropsI[] }> => {
+//     const response = axiosInstance.get('api/exhibits/');
+//     return { data: response.data };
+//     // return axiosInstance.get('api/exhibits/');
+// };

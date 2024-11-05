@@ -9,12 +9,14 @@ enum UserState {
 }
 
 export interface UserStateI {
-    key: string | null
+    key: string | null,
+    isAuthenticated: boolean,
     state: UserState
 }
 
 export const doLoginThunk = createAsyncThunk('api/auth/login', async (userData: UserFormPropsI) => {
     const response = await doLogin(userData);
+    console.log(response);
     return response.data;
 });
 
@@ -27,6 +29,7 @@ const getKeyValue = () => localStorage.getItem('token') ? localStorage.getItem('
 
 const initialState: UserStateI = {
     key: getKeyValue(),
+    isAuthenticated: false,
     state: UserState.loggedOut
 }
 
@@ -37,25 +40,31 @@ const userSlice = createSlice({
         logout(state) {
             state.key = null;
             localStorage.removeItem('token');
+            state.isAuthenticated = false;
             state.state = UserState.loggedOut;
         },
     },
     extraReducers: (builder) => {
         builder.addCase(doLoginThunk.fulfilled, (state, action) => {
-            state.key = action.payload.token;
-            localStorage.setItem('token', action.payload.token);
+            console.log(action.payload);
+            state.key = action.payload.access_token;
+            localStorage.setItem('token', action.payload.access_token);
+            state.isAuthenticated = true;
             state.state = UserState.loggedIn;
         });
         builder.addCase(doLoginThunk.rejected, (state, action) => {
             state.key = null;
+            state.isAuthenticated = false;
             state.state = UserState.loggedOut;
         });
         builder.addCase(doLoginThunk.pending, (state, action) => {
             state.key = null;
+            state.isAuthenticated = false;
             state.state = UserState.tryingLogin;
         });
         builder.addCase(doRegisterThunk.fulfilled, (state, action) => {
             state.key = null;
+            state.isAuthenticated = false;
             state.state = UserState.loggedOut;
         });
     },

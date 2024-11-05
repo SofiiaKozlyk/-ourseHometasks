@@ -4,8 +4,9 @@ import { TextField, Button, Box, Typography, Paper, Link } from '@mui/material';
 // import { doRegister } from '../api/userActions';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../store/store';
-import { doLoginThunk } from '../store/slices/userSlice';
+import { doRegisterThunk } from '../store/slices/userSlice';
 import { UserFormPropsI } from '../api/userActions';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterForm: React.FC = () => {
     const key = useSelector((state: RootState) => state.user.key);
@@ -32,7 +33,7 @@ const RegisterForm: React.FC = () => {
             username: usernameInput.value,
             password: usernamePassword.value
         };
-        dispatch(doLoginThunk(userData));
+        dispatch(doRegisterThunk(userData));
         console.log(key);
         console.log(usernameInput.value, usernamePassword.value);
       };
