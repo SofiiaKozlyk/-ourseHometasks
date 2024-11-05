@@ -6,11 +6,24 @@ export interface ExhibitPropsI {
     description: string;
 }
 
+export interface ExhibitsResponseI {
+    data: ExhibitPropsI[];
+    lastPage: number;
+}
 
-export const fetchExhibits = async (): Promise<{ data: ExhibitPropsI[] }> => {
-    const response = await axiosInstance.get('api/exhibits/');
-    return response.data;
+export const fetchExhibits = async (page: number, limit: number): Promise<ExhibitsResponseI> => {
+    const response = await axiosInstance.get<ExhibitsResponseI>('api/exhibits/', {
+        params: { page, limit } 
+    });
+    return response.data; 
 };
+
+
+
+// export const fetchExhibits = async (): Promise<{ data: ExhibitPropsI[] }> => {
+//     const response = await axiosInstance.get('api/exhibits/');
+//     return response.data;
+// };
 
 
 // export const fetchExhibits = (): Promise<{ data: ExhibitPropsI[] }> => {
