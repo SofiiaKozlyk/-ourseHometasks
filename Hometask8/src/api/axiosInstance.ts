@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-    baseURL: 'http://ec2-13-49-67-34.eu-north-1.compute.amazonaws.com/api/',
+    baseURL: 'http://ec2-13-49-67-34.eu-north-1.compute.amazonaws.com/',
     timeout: 10000,
   });
   
@@ -17,7 +17,7 @@ const axiosInstance = axios.create({
   );
   
   axiosInstance.interceptors.response.use(
-    (response) => response,
+    (response) => response.data,
     (error) => {
       if (error.response && error.response.status === 401) {
         localStorage.removeItem('token');

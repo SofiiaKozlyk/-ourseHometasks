@@ -1,24 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import { fetchExhibits } from './api/exhibitActions';
+import StipePage from './layouts/StipePage';
+import { ExhibitPropsI } from './api/exhibitActions';
 
 function App() {
+  const [exhibits, setExhibits] = useState<ExhibitPropsI[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchExhibits()
+      .then((response) => {
+        setExhibits(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching exhibits:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <StipePage exhibits={exhibits} />
     </div>
   );
 }
