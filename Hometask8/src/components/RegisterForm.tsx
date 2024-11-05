@@ -1,18 +1,24 @@
 import React from 'react';
 import { TextField, Button, Box, Typography, Paper, Link } from '@mui/material';
-import { useRequest } from 'ahooks';
-import { doRegister } from '../api/userActions';
+// import { useRequest } from 'ahooks';
+// import { doRegister } from '../api/userActions';
+import { useSelector, useDispatch } from 'react-redux';
+import { AppDispatch, RootState } from '../store/store';
+import { doLoginThunk } from '../store/slices/userSlice';
+import { UserFormPropsI } from '../api/userActions';
 
 const RegisterForm: React.FC = () => {
-    const { loading, run } = useRequest(doRegister, {
-        manual: true,
-        onSuccess: (data) => {
-            console.log('Registration successful:', data);
-        },
-        onError: (error) => {
-            console.error('Registration failed:', error);
-        }
-    });
+    const key = useSelector((state: RootState) => state.user.key);
+    const dispatch = useDispatch<AppDispatch>();
+    // const { loading, run } = useRequest(doRegister, {
+    //     manual: true,
+    //     onSuccess: (data) => {
+    //         console.log('Registration successful:', data);
+    //     },
+    //     onError: (error) => {
+    //         console.error('Registration failed:', error);
+    //     }
+    // });
 
     const handleRegister = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -22,11 +28,16 @@ const RegisterForm: React.FC = () => {
         const usernamePassword = form.elements.namedItem('password') as HTMLInputElement;
     
         //const data = run({ username: usernameInput.value, password: usernamePassword.value });
-    
+        const userData: UserFormPropsI = {
+            username: usernameInput.value,
+            password: usernamePassword.value
+        };
+        dispatch(doLoginThunk(userData));
+        console.log(key);
         console.log(usernameInput.value, usernamePassword.value);
       };
 
-    if (loading) return <p>Loading...</p>;
+    // if (loading) return <p>Loading...</p>;
 
     return (
         <Paper elevation={3} sx={{ padding: 4, maxWidth: 400, width: '100%' }}>

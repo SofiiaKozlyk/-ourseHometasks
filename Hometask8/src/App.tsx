@@ -11,7 +11,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<StipePage />} />
-      <Route path="/login" element={<LoginPage />} />
+      {/* <Route path="/login" element={<LoginPage />} /> */}
       {/* <Route
         path="/protected"
         element={
@@ -21,12 +21,6 @@ function App() {
         }
       /> */}
     </Routes>
-
-    // <div className="App">
-    //   {/* <RegisterPage /> */}
-    //   {/* <LoginPage /> */}
-    //   {/* <StipePage /> */}
-    // </div>
   );
 }
 
