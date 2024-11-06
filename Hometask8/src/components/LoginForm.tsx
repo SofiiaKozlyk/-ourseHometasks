@@ -1,15 +1,12 @@
 import React from 'react';
 import { TextField, Button, Box, Typography, Paper, Link } from '@mui/material';
-import { useSelector, useDispatch } from 'react-redux';
-import { AppDispatch, RootState } from '../store/store';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../store/store';
 import { doLoginThunk } from '../store/slices/userSlice';
 import { UserFormPropsI } from '../api/userActions';
 import { history } from '../api/navigate';
 
 const LoginForm: React.FC = () => {
-    // localStorage.removeItem('token');
-    // const key = useSelector((state: RootState) => state.user.key);
-    // console.log(key);
     const dispatch = useDispatch<AppDispatch>();
 
     const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
@@ -30,7 +27,7 @@ const LoginForm: React.FC = () => {
     return (
         <Paper elevation={3} sx={{ padding: 4, maxWidth: 400, width: '100%' }}>
             <Typography variant="h4" component="h1" gutterBottom textAlign="center">
-                Вхід
+                Login
             </Typography>
             <Box component="form" onSubmit={handleLogin}>
                 <TextField

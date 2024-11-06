@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField, Button, Box, Typography, Paper, Link } from '@mui/material';
-import { useSelector, useDispatch } from 'react-redux';
-import { AppDispatch, RootState } from '../store/store';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../store/store';
 import { doRegisterThunk } from '../store/slices/userSlice';
 import { UserFormPropsI } from '../api/userActions';
 import { history } from '../api/navigate';

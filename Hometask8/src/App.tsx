@@ -1,17 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from './components/ProtectedRoute';
 import StipePage from './layouts/StipePage';
 import LoginPage from './layouts/LoginPage';
 import RegisterPage from './layouts/RegisterPage';
-import { useSelector } from 'react-redux';
-import { RootState } from './store/store';
+import { useSelector, useDispatch } from 'react-redux';
+import { AppDispatch, RootState } from './store/store';
+import { initializeUserState } from './store/slices/userSlice';
 import ControlBar from './components/ControlBar';
 import NewPost from './layouts/NewPost';
 
 function App() {
   const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated);
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(initializeUserState());
+  }, [dispatch]);
 
   return (
     <>

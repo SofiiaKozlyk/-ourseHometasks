@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { doLogin, doRegister } from '../../api/userActions';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { doLogin, doRegister, fetchUserProfile } from '../../api/userActions';
 import { UserFormPropsI } from '../../api/userActions';
 
 enum UserState {
@@ -17,6 +17,7 @@ export interface UserStateI {
 
 export const doLoginThunk = createAsyncThunk('api/auth/login', async (userData: UserFormPropsI) => {
     const response = await doLogin(userData);
+    console.log(response);
     return response.data;
 });
 
@@ -27,6 +28,33 @@ export const doRegisterThunk = createAsyncThunk('users/register', async (userDat
 
 const getKeyValue = () => localStorage.getItem('token') ? localStorage.getItem('token') : null;
 
+const getInitialState = async (): Promise<UserStateI> => {
+    const token = getKeyValue();
+
+    if (token) {
+        try {
+            const userProfile = await fetchUserProfile();
+
+            return {
+                key: token,
+                isAuthenticated: true,
+                userId: userProfile.id,
+                state: UserState.loggedIn
+            };
+        }
+        catch (error: any) {
+            localStorage.removeItem('token');
+        }
+    }
+
+    return {
+        key: null,
+        isAuthenticated: false,
+        userId: null,
+        state: UserState.loggedOut
+    };
+}
+
 const initialState: UserStateI = {
     key: getKeyValue(),
     isAuthenticated: false,
@@ -34,10 +62,14 @@ const initialState: UserStateI = {
     state: UserState.loggedOut
 }
 
+
 const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
+        setInitialState(state, action: PayloadAction<UserStateI>) {
+            return action.payload;
+        },
         logout(state) {
             state.key = null;
             localStorage.removeItem('token');
@@ -75,5 +107,10 @@ const userSlice = createSlice({
     },
 });
 
-export const { logout } = userSlice.actions;
+export const initializeUserState = () => async (dispatch: any) => {
+    const initialState = await getInitialState();
+    dispatch(setInitialState(initialState));
+};
+
+export const { setInitialState, logout } = userSlice.actions;
 export default userSlice.reducer;
