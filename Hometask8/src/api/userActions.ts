@@ -5,6 +5,11 @@ export interface UserFormPropsI {
   password: string;
 }
 
+export interface UserI {
+  id: number;
+  username: string;
+}
+
 export const doLogin = ({ username, password }: UserFormPropsI) => {
   return axiosInstance.post('api/auth/login', {
     username: username,
@@ -17,4 +22,9 @@ export const doRegister = ({ username, password }: UserFormPropsI) => {
     username: username,
     password: password
   });
+};
+
+export const fetchUserProfile = async (): Promise<UserI> => {
+  const response = await axiosInstance.get<UserI>('/users/my-profile');
+  return response.data;
 };

@@ -1,16 +1,13 @@
 import axiosInstance from "./axiosInstance";
-
-export interface ExhibitAuthorI {
-    id: number;
-    username: string;
-}
+import { UserI } from "./userActions";
 
 export interface ExhibitPropsI {
     id: number,
     imageUrl: string,
     description: string;
-    user: ExhibitAuthorI;
+    user: UserI;
     createdAt: string;
+    commentCount: number;
 }
 
 export interface ExhibitsResponseI {
@@ -22,6 +19,11 @@ export const fetchExhibits = async (page: number, limit: number, filter: string)
     const response = await axiosInstance.get<ExhibitsResponseI>(`api/exhibits/${filter}`, {
         params: { page, limit }
     });
+    return response.data;
+};
+
+export const fetchExhibitById = async (id: number): Promise<ExhibitPropsI> => {
+    const response = await axiosInstance.get<ExhibitPropsI>(`/api/exhibits/post/${id}`);
     return response.data;
 };
 
@@ -42,17 +44,3 @@ export const removeExhibit = async (id: number) => {
     });
     return response.data;
 };
-
-
-
-// export const fetchExhibits = async (): Promise<{ data: ExhibitPropsI[] }> => {
-//     const response = await axiosInstance.get('api/exhibits/');
-//     return response.data;
-// };
-
-
-// export const fetchExhibits = (): Promise<{ data: ExhibitPropsI[] }> => {
-//     const response = axiosInstance.get('api/exhibits/');
-//     return { data: response.data };
-//     // return axiosInstance.get('api/exhibits/');
-// };
