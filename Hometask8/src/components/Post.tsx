@@ -23,7 +23,7 @@ const Post: React.FC<PostPropsI> = ({ exhibit, onDelete }) => {
     };
 
     return (
-        <Card sx={{ maxWidth: 345, mb: 2 }}>
+        <Card sx={{ maxWidth: 500, mb: 2 }}>
             <Box
                 sx={{
                     display: 'flex',
@@ -55,7 +55,7 @@ const Post: React.FC<PostPropsI> = ({ exhibit, onDelete }) => {
             </Box>
             <CardMedia
                 component="img"
-                height="200"
+                height="250"
                 image={`${axiosInstance.defaults.baseURL}${exhibit.imageUrl}`}
                 alt="Exhibit image"
             />

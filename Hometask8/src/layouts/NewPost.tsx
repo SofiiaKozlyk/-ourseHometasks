@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { addExhibit } from '../api/exhibitActions';
 import { useRequest } from 'ahooks';
+import { history } from '../api/navigate';
 
 const NewPost = () => {
     const [image, setImage] = useState<File | null>(null);
@@ -15,7 +16,7 @@ const NewPost = () => {
 
     const { loading, run: addNewItem } = useRequest(addExhibit, {
         manual: true, onSuccess: (data) => {
-            console.log(data);
+            history.push('/');
         }
     });
 
@@ -36,7 +37,6 @@ const NewPost = () => {
         formData.append('description', description);
 
         addNewItem(formData);
-
         form.reset();
     };
 

@@ -12,7 +12,6 @@ import NewPost from './layouts/NewPost';
 
 function App() {
   const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated);
-  // console.log(isAuthenticated);
 
   return (
     <>
@@ -51,15 +50,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-        {/* <Route path="/login" element={<LoginPage />} /> */}
-        {/* <Route
-        path="/protected"
-        element={
-          <ProtectedRoute isAllowed={isAuthenticated}>
-            <ProtectedComponent />
-          </ProtectedRoute>
-        }
-      /> */}
       </Routes>
     </>
   );

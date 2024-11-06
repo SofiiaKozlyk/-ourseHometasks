@@ -19,7 +19,6 @@ const CommentStripe: React.FC<CommentStripeProps> = ({ exhibitId }) => {
     const { loading, error, run: fetchCommentsAction } = useRequest(() => fetchComments(exhibitId), {
         manual: true,
         onSuccess: (data) => {
-            console.log(data);
             setComments(data);
         },
     });

@@ -13,8 +13,6 @@ const ControlBar = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
     const { loading, error, run: fetchUserAction } = useRequest(fetchUserProfile, {
         manual: true,
         onSuccess: (data) => {
-            console.log("fetch");
-            console.log(data);
             setUserProfile(data);
         },
     });

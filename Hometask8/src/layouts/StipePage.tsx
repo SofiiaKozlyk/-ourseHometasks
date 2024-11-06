@@ -19,7 +19,6 @@ const StipePage: React.FC<StripePagePropsI> = ({ filter }) => {
     const { loading, error, run: fetchExhibitsAction } = useRequest(() => fetchExhibits(currentPage, limit, filter), {
         manual: true,
         onSuccess: (data) => {
-            console.log(data);
             setTotalPages(data.lastPage);
             setExhibits(data.data);
         },
@@ -56,7 +55,7 @@ const StipePage: React.FC<StripePagePropsI> = ({ filter }) => {
                     <Box
                         key={exhibit.id}
                         sx={{
-                            width: '300px',
+                            width: '500px',
                             overflow: 'hidden',
                         }}
                     >

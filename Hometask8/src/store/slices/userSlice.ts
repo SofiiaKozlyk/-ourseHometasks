@@ -17,7 +17,6 @@ export interface UserStateI {
 
 export const doLoginThunk = createAsyncThunk('api/auth/login', async (userData: UserFormPropsI) => {
     const response = await doLogin(userData);
-    console.log(response);
     return response.data;
 });
 
@@ -49,7 +48,6 @@ const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(doLoginThunk.fulfilled, (state, action) => {
-            console.log(action.payload);
             state.key = action.payload.access_token;
             localStorage.setItem('token', action.payload.access_token);
             state.isAuthenticated = true;
