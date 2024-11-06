@@ -6,6 +6,7 @@ import { ExhibitPropsI } from "../api/exhibitActions";
 import axiosInstance from "../api/axiosInstance";
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
+import CommentStripe from "./CommentStripe";
 
 interface PostPropsI {
     exhibit: ExhibitPropsI;
@@ -62,6 +63,7 @@ const Post: React.FC<PostPropsI> = ({ exhibit, onDelete }) => {
                 <Typography variant="body2" color="text.secondary">
                     {exhibit.description}
                 </Typography>
+                <CommentStripe exhibitId={exhibit.id} />
             </CardContent>
         </Card>
     );
