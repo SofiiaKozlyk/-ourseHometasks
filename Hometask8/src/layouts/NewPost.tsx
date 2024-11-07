@@ -1,11 +1,35 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField, Typography } from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { styled } from '@mui/material/styles';
 import { addExhibit } from '../api/exhibitActions';
 import { useRequest } from 'ahooks';
-import { history } from '../api/navigate';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
+
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+});
+
+const validationSchema = Yup.object({
+    description: Yup.string()
+        .required('Required')
+        .min(4, 'Must be at least 4 characters')
+});
 
 const NewPost = () => {
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [image, setImage] = useState<File | null>(null);
+    const navigate = useNavigate();
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
@@ -15,18 +39,13 @@ const NewPost = () => {
     };
 
     const { loading, run: addNewItem } = useRequest(addExhibit, {
-        manual: true, onSuccess: (data) => {
-            history.push('/');
+        manual: true,
+        onSuccess: () => {
+            navigate('/');
         }
     });
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        const form = event.currentTarget;
-        const descriptionInput = form.elements.namedItem('description') as HTMLInputElement;
-        const description = descriptionInput.value;
-        
+    const handleSubmit = (values: { description: string }) => {
         if (!image) {
             console.error('Please upload an image.');
             return;
@@ -34,10 +53,11 @@ const NewPost = () => {
 
         const formData = new FormData();
         formData.append('image', image);
-        formData.append('description', description);
+        formData.append('description', values.description);
 
         addNewItem(formData);
-        form.reset();
+        setImagePreview(null);
+        setImage(null);
     };
 
     return (
@@ -50,47 +70,84 @@ const NewPost = () => {
                 minHeight: '100vh',
             }}
         >
-            <Box
-                component="form"
+            <Formik
+                initialValues={{ description: '' }}
+                validationSchema={validationSchema}
                 onSubmit={handleSubmit}
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    maxWidth: 400,
-                    margin: 'auto',
-                    padding: 2,
-                    border: '1px solid #ccc',
-                    borderRadius: '8px',
-                }}
             >
-                <Typography variant="h5" component="h2" gutterBottom>
-                    Create New Exhibit
-                </Typography>
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    required
-                />
-                <TextField
-                    label="Description"
-                    variant="outlined"
-                    multiline
-                    rows={4}
-                    name="description"
-                    required
-                    sx={{ marginTop: 2 }}
-                />
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    disabled={loading}
-                    sx={{ marginTop: 2 }}
-                >
-                    {loading ? 'Creating...' : 'Create Exhibit'}
-                </Button>
-            </Box>
+                {({ errors, touched }) => (
+                    <Form
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            maxWidth: 400,
+                            margin: 'auto',
+                            padding: 16,
+                            border: '1px solid #ccc',
+                            borderRadius: 8,
+                        }}
+                    >
+                        <Typography variant="h5" component="h2" gutterBottom>
+                            Create New Exhibit
+                        </Typography>
+                        {imagePreview && (
+                            <Box
+                                component="img"
+                                src={imagePreview}
+                                alt="Selected"
+                                sx={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    marginBottom: 2,
+                                    borderRadius: 2,
+                                }}
+                            />
+                        )}
+                        <Button
+                            component="label"
+                            variant="contained"
+                            tabIndex={-1}
+                            startIcon={<CloudUploadIcon />}
+                        >
+                            Upload files
+                            <VisuallyHiddenInput
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                    handleImageChange(e);
+                                    const file = e.target.files ? e.target.files[0] : null;
+                                    if (file) {
+                                        setImagePreview(URL.createObjectURL(file));
+                                    } else {
+                                        setImagePreview(null);
+                                    }
+                                }}
+                            />
+                        </Button>
+                        <Field
+                            as={TextField}
+                            label="Description"
+                            name="description"
+                            variant="outlined"
+                            multiline
+                            rows={4}
+                            fullWidth
+                            sx={{ marginTop: 2 }}
+                            error={touched.description && Boolean(errors.description)}
+                            helperText={<ErrorMessage name="description" />}
+                        />
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            disabled={loading}
+                            sx={{ marginTop: 2 }}
+                        >
+                            {loading ? 'Creating...' : 'Create Exhibit'}
+                        </Button>
+                    </Form>
+                )}
+            </Formik>
         </Box>
     );
 }
