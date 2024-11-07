@@ -10,6 +10,7 @@ import { AppDispatch, RootState } from './store/store';
 import { initializeUserState } from './store/slices/userSlice';
 import ControlBar from './components/ControlBar';
 import NewPost from './layouts/NewPost';
+import Notification from './components/Notification';
 
 function App() {
   const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated);
@@ -22,6 +23,7 @@ function App() {
   return (
     <>
       <ControlBar isAuthenticated={isAuthenticated} />
+      <Notification />
       <Routes>
         <Route path="/" element={<StipePage filter="" />} />
         <Route
