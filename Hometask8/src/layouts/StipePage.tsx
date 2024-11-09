@@ -10,6 +10,8 @@ interface StripePagePropsI {
     filter: string;
 }
 
+let refreshPosts: () => void;
+
 const StipePage: React.FC<StripePagePropsI> = ({ filter }) => {
     const [exhibits, setExhibits] = useState<ExhibitPropsI[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -38,6 +40,12 @@ const StipePage: React.FC<StripePagePropsI> = ({ filter }) => {
     useEffect(() => {
         fetchExhibitsAction();
     }, [currentPage]);
+
+    refreshPosts = () => {
+        if (currentPage === 1 && filter === '') {
+            fetchExhibitsAction();
+        }
+    };
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
@@ -72,4 +80,5 @@ const StipePage: React.FC<StripePagePropsI> = ({ filter }) => {
     )
 }
 
+export { refreshPosts };
 export default StipePage;

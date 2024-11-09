@@ -8,6 +8,8 @@ interface PaginationProps {
 }
 
 const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
+    totalPages = totalPages !== 0 ? totalPages : 1;
+
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center', margin: 2 }}>
             <Button

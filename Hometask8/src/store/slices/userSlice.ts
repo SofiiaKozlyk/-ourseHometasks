@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { doLogin, doRegister, fetchUserProfile } from '../../api/userActions';
 import { UserFormPropsI } from '../../api/userActions';
 
@@ -55,21 +55,12 @@ const getInitialState = async (): Promise<UserStateI> => {
     };
 }
 
-const initialState: UserStateI = {
-    key: getKeyValue(),
-    isAuthenticated: false,
-    userId: null,
-    state: UserState.loggedOut
-}
-
+const initialState = await getInitialState();
 
 const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setInitialState(state, action: PayloadAction<UserStateI>) {
-            return action.payload;
-        },
         logout(state) {
             state.key = null;
             localStorage.removeItem('token');
@@ -107,10 +98,5 @@ const userSlice = createSlice({
     },
 });
 
-export const initializeUserState = () => async (dispatch: any) => {
-    const initialState = await getInitialState();
-    dispatch(setInitialState(initialState));
-};
-
-export const { setInitialState, logout } = userSlice.actions;
+export const { logout } = userSlice.actions;
 export default userSlice.reducer;
