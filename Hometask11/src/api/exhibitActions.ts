@@ -13,13 +13,13 @@ export interface ExhibitPropsI {
 export interface ExhibitsResponseI {
     data: ExhibitPropsI[];
     lastPage: number;
+    page: string;
 }
 
-export const fetchExhibits = async (page: number, limit: number, filter: string): Promise<ExhibitsResponseI> => {
+export const fetchExhibits = async (page: number, limit: number = 10, filter: string = ''): Promise<ExhibitsResponseI> => {
     const response = await axiosInstance.get<ExhibitsResponseI>(`api/exhibits/${filter}`, {
         params: { page, limit }
     });
-    console.log(response.data);
     return response.data;
 };
 
