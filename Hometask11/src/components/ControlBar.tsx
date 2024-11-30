@@ -1,3 +1,4 @@
+// "use client"
 // import React, { useEffect, useState } from 'react';
 // import { logout } from '../store/slices/userSlice';
 // import { useDispatch } from 'react-redux';

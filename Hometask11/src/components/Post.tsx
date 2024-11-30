@@ -4,29 +4,29 @@ import React from "react";
 import { Card, CardMedia, CardContent, Typography, IconButton, Box, Avatar, Tooltip } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PersonIcon from '@mui/icons-material/Person';
-import { ExhibitPropsI } from "../api/exhibitActions";
+import { ExhibitPropsI, removeExhibit } from "../api/exhibitActions";
 import axiosInstance from "../api/axiosInstance";
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-import { Provider } from "react-redux";
-
-import store from "../store/store";
-
-// import CommentStripe from "./CommentStripe";
+import { useRequest } from 'ahooks';
+import CommentStripe from "./CommentStripe";
 
 interface PostPropsI {
     exhibit: ExhibitPropsI;
-    // onDelete: (id: number) => void;
 }
 
 const Post: React.FC<PostPropsI> = ({ exhibit }) => {
-    // const currentUserId = useSelector((state: RootState) => state.user.userId);
-    // const isAuthor = currentUserId === exhibit.user.id;
+    const currentUserId = useSelector((state: RootState) => state.user.userId);
+    const isAuthor = currentUserId === exhibit.user.id;
     const formattedDate = new Date(exhibit.createdAt).toLocaleDateString();
 
-    // const handleDelete = () => {
-    //     onDelete(exhibit.id);
-    // };
+    const { run: deleteExhibit } = useRequest(removeExhibit, {
+        manual: true,
+    });
+
+    const handleDeleteItem = (id: number) => {
+        deleteExhibit(id);
+    };
 
     return (
         <Card sx={{ maxWidth: 500, mb: 2 }}>
@@ -51,13 +51,13 @@ const Post: React.FC<PostPropsI> = ({ exhibit }) => {
                 <Typography variant="body2" color="text.secondary">
                     {formattedDate}
                 </Typography>
-                {/* {isAuthor && (
+                {isAuthor && (
                     <Tooltip title="Delete Post">
-                        <IconButton onClick={handleDelete} color="error">
+                        <IconButton onClick={() => handleDeleteItem(exhibit.id)} color="error">
                             <DeleteIcon />
                         </IconButton>
                     </Tooltip>
-                )} */}
+                )}
             </Box>
             <CardMedia
                 component="img"
@@ -69,7 +69,7 @@ const Post: React.FC<PostPropsI> = ({ exhibit }) => {
                 <Typography variant="body2" color="text.secondary">
                     {exhibit.description}
                 </Typography>
-                {/* <CommentStripe exhibitId={exhibit.id} /> */}
+                <CommentStripe exhibitId={exhibit.id} />
             </CardContent>
         </Card>
 

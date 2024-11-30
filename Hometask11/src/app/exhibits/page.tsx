@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { fetchExhibits } from "@/api/exhibitActions";
 import StipePage from "@/components/StipePage";

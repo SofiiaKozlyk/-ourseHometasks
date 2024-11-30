@@ -1,21 +1,30 @@
 "use client"
 
-import React from 'react';
+import React, { useEffect }  from 'react';
 import { TextField, Button, Typography, Paper, Link } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store/store';
 import { doRegisterThunk } from '../store/slices/userSlice';
 import { UserFormPropsI } from '../api/userActions';
-// import { history } from '../api/navigate';
 import { LoginSchema } from './LoginForm';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 
 const RegisterForm: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
+    const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated);
+    const router = useRouter();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            router.push('/exhibits');
+        }
+    }, [isAuthenticated, router]);
 
     const handleRegister = (values: UserFormPropsI) => {
         dispatch(doRegisterThunk(values));
-        // history.push('/login');
     };
 
     return (

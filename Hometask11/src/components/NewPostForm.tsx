@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import { Box, Button, TextField, Typography } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
@@ -8,9 +8,9 @@ import { addExhibit } from '../api/exhibitActions';
 import { useRequest } from 'ahooks';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-// import { useRouter } from 'next/router';
-import { useRouter } from 'next/compat/router';
-// import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -34,7 +34,14 @@ const NewPostForm = () => {
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [image, setImage] = useState<File | null>(null);
     const router = useRouter();
-    // const navigate = useNavigate();
+    
+    const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated);
+
+    useEffect(() => {
+        if (!isAuthenticated) {
+            router.push('/exhibits'); 
+        }
+    }, [isAuthenticated, router]);
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
@@ -47,7 +54,6 @@ const NewPostForm = () => {
         manual: true,
         onSuccess: () => {
             router.push('/');
-            // navigate('/');
         }
     });
 
